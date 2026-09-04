@@ -6,6 +6,7 @@ export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
     const [user,setUser] = useState(null);
+    const [auth,setAuth] = useState(null);
     const [isLoading,setIsLoading] = useState(false);
     const [error,setError] = useState(null);
 
@@ -15,8 +16,10 @@ export function AuthProvider({ children }) {
         try {
             setIsLoading(true);
 
-        const userData = await authService.login(email,password);
-        setUser(userData);
+        const {user, accesToken} = await authService.login(email,password);
+        setUser(user);
+        setAuth({ accesToken });
+
         } catch (err) {
             setError(err.message || 'An error ocure during loading!')
 
@@ -31,6 +34,7 @@ export function AuthProvider({ children }) {
         user,
         isLoading,
         error,
+        auth,
         login: (userData) => setUser(userData),
         logout: () => setUser(null),
         clearError: () => setError(null),
