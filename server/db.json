@@ -1,4 +1,15 @@
 {
-    "users": [],
-    "places": []
+  "users": [
+    {
+      "email": "some@email.bg",
+      "password": "$2a$10$eHA5J6MLCIcX3Z.4cwFPluhwCBaWdRy.LkUvXA1dA/GAFDTT8qDwe",
+      "id": 1
+    },
+    {
+      "email": "demo@example.com",
+      "password": "$2a$10$vp4c8bL9eqAXhjjpHTXE0.XLcBougOKbDRoboQ91LEdJXMMEhVPvK",
+      "id": 2
+    }
+  ],
+  "places": []
 }
