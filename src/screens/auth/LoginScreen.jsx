@@ -18,7 +18,7 @@ const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
-    const { login, isLoading, error, clearError } = useAuth();
+    const { login, isLoading,error,clearError} = useAuth();
 
     const validate = () => {
         const newErrors = {};
@@ -40,7 +40,8 @@ const LoginScreen = ({ navigation }) => {
     };
 
     const handleLogin = async () => {
-        clearError();
+         
+        
         if (!validate()) return;
 
         await login(email, password);

@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/auth/useAuth';
 
 const HomeScreen = ({ navigation }) => {
-     const { logout } = useAuth();
+     const { logout,user } = useAuth();
     // const { places } = usePlace();
 
     return (
@@ -16,7 +16,7 @@ const HomeScreen = ({ navigation }) => {
                         <Ionicons name="person" size={40} color="#6366f1" />
                     </View>
                     <Text style={styles.welcomeText}>Welcome back,</Text>
-                    <Text style={styles.userName}>{name}</Text>
+                    <Text style={styles.userName}>{user.name}</Text>
                 </View>
 
                 <View style={styles.statsSection}>

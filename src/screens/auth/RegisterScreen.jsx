@@ -20,7 +20,7 @@ export default function RegisterScreen() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errors, setErrors] = useState({});
-    const { register, isLoading, error, clearError } = useAuth();
+    const { register, isLoading, error} = useAuth();
 
     const validate = () => {
         const newErrors = {};
@@ -50,7 +50,7 @@ export default function RegisterScreen() {
     };
 
     const handleRegister = async () => {
-        clearError();
+        
         if (!validate()) return;
 
         await register(email, password, name);

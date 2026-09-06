@@ -17,5 +17,11 @@
       "id": 3
     }
   ],
-  "places": []
+  "places": [
+    {
+      "title": "test 2",
+      "description": "ihfihiehf",
+      "id": 1
+    }
+  ]
 }
