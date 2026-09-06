@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import {
     View,
     Text,
@@ -8,20 +8,26 @@ import {
     ScrollView,
     TouchableOpacity,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@react-native-vector-icons/ionicons';
 import Input from '../../components/Input';
 import Button from '../../components/Button.jsx';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/auth/useAuth.js';
 
-const LoginScreen = ({ navigation }) => {
+export default function RegisterScreen() {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [errors, setErrors] = useState({});
-    const { login, isLoading, error, clearError } = useAuth();
+    const { register, isLoading, error, clearError } = useAuth();
 
     const validate = () => {
         const newErrors = {};
+
+        if (!name.trim()) {
+            newErrors.name = 'Name is required';
+        }
 
         if (!email.trim()) {
             newErrors.email = 'Email is required';
@@ -35,17 +41,20 @@ const LoginScreen = ({ navigation }) => {
             newErrors.password = 'Password must be at least 4 characters';
         }
 
+        if (password !== confirmPassword) {
+            newErrors.confirmPassword = 'Passwords do not match';
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleLogin = async () => {
+    const handleRegister = async () => {
         clearError();
         if (!validate()) return;
 
-        await login(email, password);
+        await register(email, password, name);
     };
-
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView
@@ -58,10 +67,10 @@ const LoginScreen = ({ navigation }) => {
                 >
                     <View style={styles.header}>
                         <View style={styles.iconContainer}>
-                            <Ionicons name="location" size={48} color="#6366f1" />
+                            <Ionicons name="person-add" size={48} color="#6366f1" />
                         </View>
-                        <Text style={styles.title}>Favourite Places</Text>
-                        <Text style={styles.subtitle}>Sign in to your account</Text>
+                        <Text style={styles.title}>Create Account</Text>
+                        <Text style={styles.subtitle}>Join us and start saving your favourite places</Text>
                     </View>
 
                     {error && (
@@ -72,6 +81,18 @@ const LoginScreen = ({ navigation }) => {
                     )}
 
                     <View style={styles.form}>
+                        <Input
+                            label="Name"
+                            value={name}
+                            onChangeText={(text) => {
+                                setName(text);
+                                if (errors.name) setErrors({ ...errors, name: null });
+                            }}
+                            placeholder="Enter your name"
+                            autoCapitalize="words"
+                            error={errors.name}
+                        />
+
                         <Input
                             label="Email"
                             value={email}
@@ -92,36 +113,43 @@ const LoginScreen = ({ navigation }) => {
                                 setPassword(text);
                                 if (errors.password) setErrors({ ...errors, password: null });
                             }}
-                            placeholder="Enter your password"
+                            placeholder="Create a password"
                             secureTextEntry
                             error={errors.password}
                         />
 
+                        <Input
+                            label="Confirm Password"
+                            value={confirmPassword}
+                            onChangeText={(text) => {
+                                setConfirmPassword(text);
+                                if (errors.confirmPassword) setErrors({ ...errors, confirmPassword: null });
+                            }}
+                            placeholder="Confirm your password"
+                            secureTextEntry
+                            error={errors.confirmPassword}
+                        />
+
                         <Button
-                            title="Sign In"
-                            onPress={handleLogin}
+                            title="Create Account"
+                            onPress={handleRegister}
                             loading={isLoading}
                             disabled={isLoading}
-                            style={styles.loginButton}
+                            style={styles.registerButton}
                         />
                     </View>
 
                     <View style={styles.footer}>
-                        <Text style={styles.footerText}>Don't have an account?</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                            <Text style={styles.linkText}>Sign Up</Text>
+                        <Text style={styles.footerText}>Already have an account?</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                            <Text style={styles.linkText}>Sign In</Text>
                         </TouchableOpacity>
-                    </View>
-
-                    <View style={styles.demoInfo}>
-                        <Text style={styles.demoTitle}>Demo Account:</Text>
-                        <Text style={styles.demoText}>demo@example.com / password</Text>
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -138,7 +166,7 @@ const styles = StyleSheet.create({
     },
     header: {
         alignItems: 'center',
-        marginBottom: 40,
+        marginBottom: 32,
     },
     iconContainer: {
         width: 100,
@@ -158,6 +186,7 @@ const styles = StyleSheet.create({
     subtitle: {
         fontSize: 16,
         color: '#64748b',
+        textAlign: 'center',
     },
     errorBanner: {
         flexDirection: 'row',
@@ -176,7 +205,7 @@ const styles = StyleSheet.create({
     form: {
         marginBottom: 24,
     },
-    loginButton: {
+    registerButton: {
         marginTop: 8,
     },
     footer: {
@@ -194,23 +223,4 @@ const styles = StyleSheet.create({
         color: '#6366f1',
         fontWeight: '600',
     },
-    demoInfo: {
-        marginTop: 40,
-        padding: 16,
-        backgroundColor: '#f8fafc',
-        borderRadius: 12,
-        alignItems: 'center',
-    },
-    demoTitle: {
-        fontSize: 12,
-        color: '#64748b',
-        fontWeight: '600',
-        marginBottom: 4,
-    },
-    demoText: {
-        fontSize: 13,
-        color: '#94a3b8',
-    },
 });
-
-export default LoginScreen;

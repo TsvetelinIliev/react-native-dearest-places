@@ -9,6 +9,12 @@
       "email": "demo@example.com",
       "password": "$2a$10$vp4c8bL9eqAXhjjpHTXE0.XLcBougOKbDRoboQ91LEdJXMMEhVPvK",
       "id": 2
+    },
+    {
+      "email": "pesho@abv.bg",
+      "password": "$2a$10$GYv9/I373Te2aXsIl0mC5ewb229VuD1ooZl9hw.JQffvXm5BrOwsG",
+      "name": "Pesho",
+      "id": 3
     }
   ],
   "places": []

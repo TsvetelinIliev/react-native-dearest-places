@@ -10,6 +10,7 @@ export const AuthContext = createContext({
     user: null,
     auth: null,
     login: async (email,password) => {},
+    register: async (email,password,name) => {},
     logout: () => {}
 });
 
@@ -22,6 +23,8 @@ export function AuthProvider({ children }) {
     });
     const [isLoading,setIsLoading] = useState(false);
     const [error,setError] = useState(null);
+
+    
 
 
     const login = async (email,password) => {
@@ -43,6 +46,19 @@ export function AuthProvider({ children }) {
         
     }
 
+    const register = async (email, password, name) => {
+        try {
+            setIsLoading(true);
+            const { user, accessToken } = await authService.register(email, password, name);
+            setAuth({ user, accessToken });
+        } catch (err) {
+            setError(err.message || 'An error occurred during registration');
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }
+
     const contextValue = {
         isAutenticated: !! auth.user,
         user: auth.user,
@@ -50,6 +66,7 @@ export function AuthProvider({ children }) {
         error,
         auth,
         login,
+        register,
         logout: () => {
 
             setAuth({
@@ -57,11 +74,11 @@ export function AuthProvider({ children }) {
             user: null,
 
 
-            })
+            });
 
             
         },
-            
+        
         clearError: () => setError(null),
     };
 
