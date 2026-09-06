@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@react-native-vector-icons/ionicons';
 import Input from '../../components/Input';
 import Button from '../../components/Button.jsx';
 import { useAuth } from '../../contexts/auth/useAuth.js';

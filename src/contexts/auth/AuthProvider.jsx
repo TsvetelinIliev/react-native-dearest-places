@@ -1,12 +1,25 @@
 import { createContext, useState } from "react";
 import { authService } from "../../services";
+import usePersistedState from "../../hooks/usePersistedState";
 
-export const AuthContext = createContext();
+
+export const AuthContext = createContext({
+    isAutenticated: false,
+    isLoading: false,
+    error: null,
+    user: null,
+    auth: null,
+    login: async (email,password) => {},
+    logout: () => {}
+});
 
 
 export function AuthProvider({ children }) {
-    const [user,setUser] = useState(null);
-    const [auth,setAuth] = useState(null);
+    
+    const [auth,setAuth] = usePersistedState("auth",{
+        accessToken: null,
+        user: null,
+    });
     const [isLoading,setIsLoading] = useState(false);
     const [error,setError] = useState(null);
 
@@ -17,8 +30,8 @@ export function AuthProvider({ children }) {
             setIsLoading(true);
 
         const {user, accesToken} = await authService.login(email,password);
-        setUser(user);
-        setAuth({ accesToken });
+        
+        setAuth({ user,accesToken });
 
         } catch (err) {
             setError(err.message || 'An error ocure during loading!')
@@ -31,12 +44,24 @@ export function AuthProvider({ children }) {
     }
 
     const contextValue = {
-        user,
+        isAutenticated: !! auth.user,
+        user: auth.user,
         isLoading,
         error,
         auth,
-        login: (userData) => setUser(userData),
-        logout: () => setUser(null),
+        login,
+        logout: () => {
+
+            setAuth({
+            accessToken: null,
+            user: null,
+
+
+            })
+
+            
+        },
+            
         clearError: () => setError(null),
     };
 
