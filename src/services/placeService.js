@@ -1,5 +1,12 @@
 import { api } from "./api";
 
+
+export async function getAll() {
+    const result = await api.get('/places');
+
+    return result.data;
+}
+
 export async function create(placeData) {
 
     const result = await api.post('/places',placeData);
