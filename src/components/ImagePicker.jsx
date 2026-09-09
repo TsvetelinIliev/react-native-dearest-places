@@ -5,7 +5,6 @@ import { launchImageLibraryAsync , requestMediaLibraryPermissionsAsync } from 'e
 
 
 export default function ImagePicker({
-    styles = {},
     imageUri,
     onImagePicked,
 }) {
@@ -59,7 +58,7 @@ export default function ImagePicker({
                     )}
 
             </TouchableOpacity>
-            
+
             {imageUri && (
                 <TouchableOpacity style={styles.changeButton} onPress={pickImageHandler}>
                     <Ionicons name="refresh" size={16} color="#6366f1" />
