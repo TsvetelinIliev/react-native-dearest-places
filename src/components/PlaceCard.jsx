@@ -4,7 +4,7 @@ import { Ionicons } from '@react-native-vector-icons/ionicons';
 
 
 const PlaceCard = ({
-    imageUrl,
+    imageUri,
     title,
     address,
     onPress,
@@ -13,8 +13,8 @@ const PlaceCard = ({
     return (
         <TouchableOpacity style={styles.container}  onPress={onPress} >
             <View style={styles.imageContainer}>
-                {imageUrl ? (
-                    <Image source={{ uri: imageUrl }} style={styles.image} />
+                {imageUri ? (
+                    <Image source={{ uri: imageUri }} style={styles.image} />
                 ) : (
                     <View style={styles.imagePlaceholder}>
                         <Ionicons name="image-outline" size={40} color="#cbd5e1" />
