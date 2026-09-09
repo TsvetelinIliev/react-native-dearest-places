@@ -12,16 +12,19 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { usePlace } from '../../contexts/places/usePlaces';
 
+import ImagePicker from '../../components/ImagePicker';
+
 
 export function CreatePlaceScreen({ navigation }) {
     
     const {createPlace} = usePlace();
     const [title,setTitle] = useState('');
     const [description,setDescription] = useState('');
+    const [imageUri,setImageUri] = useState(null);
 
     const savePlaceHandler = async () => {
 
-        await createPlace({title,description});
+        await createPlace({title,description,imageUri});
 
         navigation.goBack();
     }
@@ -41,6 +44,7 @@ export function CreatePlaceScreen({ navigation }) {
             >
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Photo</Text>
+                    <ImagePicker onImagePicked={setImageUri} imageUri={imageUri}/>
                     
                    
                 </View>
