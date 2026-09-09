@@ -13,6 +13,7 @@ import Button from '../../components/Button';
 import { usePlace } from '../../contexts/places/usePlaces';
 
 import ImagePicker from '../../components/ImagePicker';
+import CameraCapture from '../../components/CameraCapture';
 
 
 export function CreatePlaceScreen({ navigation }) {
@@ -45,6 +46,7 @@ export function CreatePlaceScreen({ navigation }) {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Photo</Text>
                     <ImagePicker onImagePicked={setImageUri} imageUri={imageUri}/>
+                    <CameraCapture onPhotoTaken={setImageUri} />
                     
                    
                 </View>
