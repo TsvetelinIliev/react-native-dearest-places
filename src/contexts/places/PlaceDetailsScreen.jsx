@@ -7,20 +7,25 @@ import {
     Dimensions,
 } from 'react-native';
 import { Ionicons } from '@react-native-vector-icons/ionicons';
-
-
+import * as Sharing from 'expo-sharing';
+import Button from '../../components/Button';
 
 const { width } = Dimensions.get('window');
 
 const PlaceDetailsScreen = ({ route, navigation }) => {
     const { place } = route.params;
-    
 
     {/* loading overlay */ }
     return (
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
             {/* TODO: Show image */}
 
+            <View style={styles.imagePlaceholder}>
+                {place.imageUri
+                    ? <Image source={{ uri: place.imageUri }} style={styles.image} />
+                    : <Ionicons name="image-outline" size={64} color="#cbd5e1" />
+                }
+            </View>
 
             <View style={styles.content}>
                 <Text style={styles.title}>{place.title}</Text>
@@ -47,7 +52,17 @@ const PlaceDetailsScreen = ({ route, navigation }) => {
 
 
                 <View style={styles.actions}>
-                    
+                    <Button
+                        title="Share Place"
+                        icon={<Ionicons name="share-outline" size={20} color="#fff" />}
+                        onPress={() => {
+                            Sharing.shareAsync(place.imageUri, {
+                                mimeType: 'image/jpeg', // Android
+                                UTI: 'public.jpeg', // iOS
+                                dialogTitle: 'Share Place Image',
+                            });
+                        }}
+                    />
                 </View>
 
                 <Text style={styles.createdAt}>
