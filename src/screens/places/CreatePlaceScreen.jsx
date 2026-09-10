@@ -14,6 +14,7 @@ import { usePlace } from '../../contexts/places/usePlaces';
 
 import ImagePicker from '../../components/ImagePicker';
 import CameraCapture from '../../components/CameraCapture';
+import LocationPicker from '../../components/LocationPicker';
 
 
 export function CreatePlaceScreen({ navigation }) {
@@ -73,7 +74,7 @@ export function CreatePlaceScreen({ navigation }) {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Location</Text>
 
-                    {/* <Text style={styles.errorText}>Location error</Text> */}
+                    <LocationPicker />
 
                     
 

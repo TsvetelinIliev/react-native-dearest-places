@@ -17,6 +17,7 @@
     "axios": "^1.20.0",
     "expo": "^57.0.20",
     "expo-image-picker": "~57.0.16",
+    "expo-location": "~57.0.16",
     "expo-sharing": "~57.0.18",
     "expo-status-bar": "~57.0.1",
     "json-server": "^0.17.4",
