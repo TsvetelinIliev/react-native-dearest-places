@@ -79,7 +79,12 @@ export function CreatePlaceScreen({ navigation }) {
 
                     
 
-                    {/* Address preview */}
+                     {address && (
+                        <View style={styles.addressPreview}>
+                            <Ionicons name="location" size={16} color="#6366f1" />
+                            <Text style={styles.addressText}>{address}</Text>
+                        </View>
+                    )}
                     
                         <View style={styles.addressPreview}>
                             <Ionicons name="location" size={16} color="#6366f1" />
