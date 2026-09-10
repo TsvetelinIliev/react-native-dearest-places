@@ -20,6 +20,7 @@ import LocationPicker from '../../components/LocationPicker';
 export function CreatePlaceScreen({ navigation }) {
     
     const {createPlace} = usePlace();
+    const [address,setAddress] = useState('');
     const [title,setTitle] = useState('');
     const [description,setDescription] = useState('');
     const [imageUri,setImageUri] = useState(null);
@@ -74,7 +75,7 @@ export function CreatePlaceScreen({ navigation }) {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Location</Text>
 
-                    <LocationPicker />
+                    <LocationPicker onLocationPicked={setAddress} />
 
                     
 
