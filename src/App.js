@@ -3,28 +3,27 @@ import AppNavigation from './navigation/AppNavigation';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthProvider } from './contexts/auth/AuthProvider';
 import { PlaceProvider } from './contexts/places/PlaceProvider';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 
 export default function App() {
   return (
-    <NavigationContainer >
-      <StatusBar style="auto" />
 
-      <AuthProvider>
-        <PlaceProvider>
-           <AppNavigation />
+    <GestureHandlerRootView style={{ flex: 1 }} >
 
-        </PlaceProvider>
+      <NavigationContainer >
+        <StatusBar style="auto" />
 
-        
-         
+        <AuthProvider>
+          <PlaceProvider>
+            <AppNavigation />
 
-        
+          </PlaceProvider>
 
+        </AuthProvider>
 
-      </AuthProvider>
-
-    </NavigationContainer>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }

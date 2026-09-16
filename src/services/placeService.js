@@ -20,3 +20,10 @@ export async function getById(placeId) {
 
     return result.data;
 }
+
+export async function deletePlace(placeId) {
+     const result = await api.delete(`/places/${placeId}`);
+
+     return result.data;
+    
+}

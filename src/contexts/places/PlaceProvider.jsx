@@ -1,10 +1,12 @@
 import { createContext, useEffect, useState } from "react";
 import { placeService } from "../../services";
 
+
 export const PlaceContex = createContext({
     places: [],
     async createPlace (placeData)  { },
     getPlacesById(placeId) { },
+    async deletePlace(placeId) { },
    
 });
 
@@ -40,10 +42,25 @@ export function PlaceProvider({children}) {
 
     };
 
+    const deletePlace = async (placeId) => {
+
+        try {
+            await placeService.deletePlace(placeId);
+            setPlaces((oldPlaces) => oldPlaces.filter(place => place.id !== placeId));
+            
+        } catch (err) {
+
+            console.error('Error deleteing place',err)
+            
+        }
+
+    }
+
     const contextValue = {
         places,
         createPlace,
         getPlacesById,
+        deletePlace,
     }
 
     return (

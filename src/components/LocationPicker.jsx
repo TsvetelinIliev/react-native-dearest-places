@@ -1,4 +1,4 @@
-// import { AppleMaps, GoogleMaps, useLocationPermissions } from 'expo-maps';
+//import { AppleMaps, GoogleMaps, useLocationPermissions } from 'expo-maps';
 import { View, StyleSheet, Text, TouchableOpacity, ActivityIndicator, } from "react-native";
 import { getCurrentPositionAsync, Accuracy, useForegroundPermissions, reverseGeocodeAsync } from 'expo-location';
 import Ionicons from '@react-native-vector-icons/ionicons';
@@ -137,3 +137,5 @@ const styles = StyleSheet.create({
         color: '#6366f1',
     },
 });
+
+
