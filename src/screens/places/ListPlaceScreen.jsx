@@ -5,16 +5,27 @@ import { View } from "react-native";
 import { FlatList } from "react-native";
 import { usePlace } from "../../contexts/places/usePlaces";
 import PlaceCard from "../../components/PlaceCard";
+import { Directions, Gesture, GestureDetector } from "react-native-gesture-handler";
 
 export default function ListPlaceScreen({ navigation }) {
-    const {places} = usePlace()
+    const {places} = usePlace();
+
+    const filngGesture = Gesture.Fling()
+          .direction([Directions.LEFT])
+          .onStart(() => {
+            
+          })
 
     return (
         <View style={styles.container} >
-            <FlatList 
-            data={places}
-            keyExtractor={(item) => item.id}
-            renderItem={({item}) => <PlaceCard {...item}  onPress={() => navigation.navigate('PlaceDetails',{ place: item})} />}
+            <FlatList
+                data={places}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <GestureDetector gesture={flingGesture} >
+                        <PlaceCard {...item} onPress={() => navigation.navigate('PlaceDetails', { place: item })} />
+                    </GestureDetector>
+                )}
 
             />
 

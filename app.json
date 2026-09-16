@@ -37,10 +37,17 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Yhe app access your location to let you share it with your friends."
+          "locationWhenInUsePermission": "The app access your location to let you share it with your friends."
         }
+      ],
+      [
+         "expo-maps",
+      {
+        "requestLocationPermission": true,
+        "locationPermission": "Allow $(PRODUCT_NAME) to use your location"
+      }
       ]
-      
+     
     ]
   }
 }

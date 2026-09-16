@@ -22,12 +22,13 @@ export function CreatePlaceScreen({ navigation }) {
     const {createPlace} = usePlace();
     const [address,setAddress] = useState('');
     const [title,setTitle] = useState('');
+    const [coords,setCoords] = useState({ });
     const [description,setDescription] = useState('');
     const [imageUri,setImageUri] = useState(null);
 
     const savePlaceHandler = async () => {
 
-        await createPlace({title,description,imageUri});
+        await createPlace({title,description,imageUri,address,coords});
 
         navigation.goBack();
     }
@@ -75,7 +76,7 @@ export function CreatePlaceScreen({ navigation }) {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Location</Text>
 
-                    <LocationPicker onLocationPicked={setAddress} />
+                    <LocationPicker onLocationPicked={setAddress} onCoordsPicked={setCoords} coords={coords} />
 
                     
 
