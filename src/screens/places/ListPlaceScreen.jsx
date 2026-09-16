@@ -7,25 +7,50 @@ import { usePlace } from "../../contexts/places/usePlaces";
 import PlaceCard from "../../components/PlaceCard";
 import { Directions, Gesture, GestureDetector } from "react-native-gesture-handler";
 
-export default function ListPlaceScreen({ navigation }) {
-    const {places} = usePlace();
 
-    const filngGesture = Gesture.Fling()
-          .direction([Directions.LEFT])
-          .onStart(() => {
+const PlaceCartWithGesture = ({ 
+    item,
+    onPress,
+    onDelete,
+}) => {
+        const deleteGesture = Gesture.Fling()
+          .direction(Directions.LEFT)
+          .onEnd((event) => {
             
-          })
+            
+            onDelete?.(item.id);
+
+          });
+
+          return (
+                   <GestureDetector gesture={deleteGesture} >
+                        <PlaceCard {...item} onPress={onPress} />
+                    </GestureDetector>
+
+          )
+
+
+}
+
+export default function ListPlaceScreen({ navigation }) {
+    const {places,deletePlace} = usePlace();
+
 
     return (
         <View style={styles.container} >
             <FlatList
                 data={places}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <GestureDetector gesture={flingGesture} >
-                        <PlaceCard {...item} onPress={() => navigation.navigate('PlaceDetails', { place: item })} />
-                    </GestureDetector>
-                )}
+                renderItem={({ item }) => 
+                <PlaceCartWithGesture item={item} onPress={() => navigation.navigate('PlaceDetails', { place: item })}
+                onDelete={deletePlace}
+                
+
+                />
+                    
+                        
+                 
+                }
 
             />
 
