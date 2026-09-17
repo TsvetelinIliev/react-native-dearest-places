@@ -8,6 +8,7 @@ import PlaceCard from "../../components/PlaceCard";
 import { Directions, Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { scheduleOnRN } from 'react-native-worklets';
+import { selectionAsync } from "expo-haptics";
 
 
 const PlaceCartWithGesture = ({ 
@@ -41,6 +42,9 @@ const PlaceCartWithGesture = ({
         const sortGesture = Gesture.Pan()
         //.activeOffsetY([ -20,20 ])
         .activateAfterLongPress(500)
+        .onStart(() => {
+            scheduleOnRN(selectionAsync);   
+        })
             .onUpdate((event) => {
                 positionY.value = event.translationY;
             })
