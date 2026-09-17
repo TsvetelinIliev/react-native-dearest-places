@@ -19,30 +19,9 @@
   ],
   "places": [
     {
-      "title": "test 3",
-      "description": "new description",
-      "id": 4
-    },
-    {
       "title": "test 4",
       "description": "test test",
       "id": 5
-    },
-    {
-      "title": "test test",
-      "description": "test test",
-      "id": 6
-    },
-    {
-      "title": "test9",
-      "description": "some some",
-      "id": 7
-    },
-    {
-      "title": "place 1",
-      "description": "place place",
-      "imageUri": "blob:http://localhost:8081/98f83c88-d518-4711-bcad-c9017b1fc67b",
-      "id": 8
     },
     {
       "title": "test 5 ",

@@ -6,6 +6,8 @@ import { FlatList } from "react-native";
 import { usePlace } from "../../contexts/places/usePlaces";
 import PlaceCard from "../../components/PlaceCard";
 import { Directions, Gesture, GestureDetector } from "react-native-gesture-handler";
+import { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { scheduleOnRN } from 'react-native-worklets';
 
 
 const PlaceCartWithGesture = ({ 
@@ -13,18 +15,47 @@ const PlaceCartWithGesture = ({
     onPress,
     onDelete,
 }) => {
-        const deleteGesture = Gesture.Fling()
-          .direction(Directions.LEFT)
-          .onEnd((event) => {
-            
-            
-            onDelete?.(item.id);
+        const positionX = useSharedValue(0);
+        const positionY = useSharedValue(0);  
 
-          });
+        const animatedStyle = useAnimatedStyle(() => ({
+            transform: [{transleteX: positionX.value},{ translateY: positionY.value}]
+        }))
+
+        const deleteGesture = Gesture.Pan()
+          //.direction(Directions.LEFT)
+          .activeOffsetX(-20)
+          .onUpdate((event) => {
+            positionX.value = event.translationX;
+          })
+          .onEnd((event) => {
+            if(event.translationX < -100) {
+                return scheduleOnRN(onDelete,item.id);
+                
+                
+
+            }
+            positionX.value = 0;
+        });
+
+        const sortGesture = Gesture.Pan()
+        //.activeOffsetY([ -20,20 ])
+        .activateAfterLongPress(500)
+            .onUpdate((event) => {
+                positionY.value = event.translationY;
+            })
+            .onEnd(() => {
+                positionY.value = 0;
+            });
+        
+                
+            const combineGesture = Gesture.Race(deleteGesture,sortGesture);
 
           return (
-                   <GestureDetector gesture={deleteGesture} >
-                        <PlaceCard {...item} onPress={onPress} />
+                   <GestureDetector gesture={combineGesture} >
+                        <PlaceCard {...item} onPress={onPress} 
+                        style={animatedStyle}
+                        />
                     </GestureDetector>
 
           )
