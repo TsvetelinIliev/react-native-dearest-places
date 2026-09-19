@@ -3,10 +3,11 @@ import { Ionicons } from '@react-native-vector-icons/ionicons';
 import Button from '../../components/Button';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/auth/useAuth';
+import { usePlace } from '../../contexts/places/usePlaces';
 
 const HomeScreen = ({ navigation }) => {
      const { logout,user } = useAuth();
-    // const { places } = usePlace();
+     const { places } = usePlace();
 
     return (
         <SafeAreaView style={styles.container}>
@@ -22,7 +23,7 @@ const HomeScreen = ({ navigation }) => {
                 <View style={styles.statsSection}>
                     <View style={styles.statCard}>
                         <Ionicons name="location" size={32} color="#6366f1" />
-                         <Text style={styles.statNumber}>3</Text> 
+                         <Text style={styles.statNumber}>{places.length}</Text> 
                         <Text style={styles.statLabel}>Saved Places</Text>
                     </View>
                 </View>

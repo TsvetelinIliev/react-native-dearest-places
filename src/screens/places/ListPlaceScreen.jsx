@@ -6,7 +6,7 @@ import { FlatList } from "react-native";
 import { usePlace } from "../../contexts/places/usePlaces";
 import PlaceCard from "../../components/PlaceCard";
 import { Directions, Gesture, GestureDetector } from "react-native-gesture-handler";
-import { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { scheduleOnRN } from 'react-native-worklets';
 import { selectionAsync } from "expo-haptics";
 
@@ -33,6 +33,14 @@ const PlaceCartWithGesture = ({
             ],
             zIndex: isSelected ? 1 : 0,
         }});
+
+          const trashOpacity = useAnimatedStyle(() => {
+        const opacity = (-positionX.value - 50) / 250;
+
+        return {
+            opacity: Math.min(Math.max(opacity, 0), 1),
+        };
+    });
 
         const deleteGesture = Gesture.Pan()
           //.direction(Directions.LEFT)
@@ -83,15 +91,22 @@ const PlaceCartWithGesture = ({
                 
             const combineGesture = Gesture.Race(deleteGesture,sortGesture,tabGesture);
 
-          return (
-                   <GestureDetector gesture={combineGesture} >
-                        <PlaceCard {...item} 
-                        onPress={onPress} 
-                        style={animatedStyle}
-                        />
-                    </GestureDetector>
+    return (
+        <GestureDetector gesture={combineGesture}>
+            <View>
+                <PlaceCard
+                    {...item}
+                    style={[animatedStyle,]}
+                    onPress={onPress}
+                />
 
-          )
+                <Animated.View style={[trashOpacity, { position: 'absolute', zIndex: -1, right: 20, top: 15, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fee2e2', borderRadius: 20, padding: 8 }]}>
+                    <Ionicons name="trash-outline" size={60} color="#b40000" />
+                </Animated.View>
+            </View>
+        </GestureDetector>
+
+    )
 
 
 }
