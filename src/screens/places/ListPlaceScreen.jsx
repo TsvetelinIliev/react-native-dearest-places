@@ -10,18 +10,29 @@ import { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { scheduleOnRN } from 'react-native-worklets';
 import { selectionAsync } from "expo-haptics";
 
-
+const CART_ITEM_HEIGHT = 100;
 const PlaceCartWithGesture = ({ 
     item,
+    index,
     onPress,
     onDelete,
+    onSort,
 }) => {
         const positionX = useSharedValue(0);
-        const positionY = useSharedValue(0);  
+        const positionY = useSharedValue(0); 
+        const scale = useSharedValue(1); 
 
-        const animatedStyle = useAnimatedStyle(() => ({
-            transform: [{transleteX: positionX.value},{ translateY: positionY.value}]
-        }))
+        const animatedStyle = useAnimatedStyle(() => {
+
+            const isSelected = scale.value > 1;
+
+            return {
+            transform: [{transleteX: positionX.value},
+                { translateY: positionY.value},
+                { scale: scale.value }
+            ],
+            zIndex: isSelected ? 1 : 0,
+        }});
 
         const deleteGesture = Gesture.Pan()
           //.direction(Directions.LEFT)
@@ -40,24 +51,42 @@ const PlaceCartWithGesture = ({
         });
 
         const sortGesture = Gesture.Pan()
-        //.activeOffsetY([ -20,20 ])
+        // .activeOffsetY([-20, 20])
         .activateAfterLongPress(500)
         .onStart(() => {
-            scheduleOnRN(selectionAsync);   
+            scheduleOnRN(selectionAsync);
+            scale.value = 1.05;
+            
         })
-            .onUpdate((event) => {
-                positionY.value = event.translationY;
-            })
-            .onEnd(() => {
-                positionY.value = 0;
-            });
+        .onUpdate((event) => {
+            positionY.value = event.translationY;
+
+            if(event.translationY > CART_ITEM_HEIGHT) {
+                scheduleOnRN(onSort,item.id, index +1);
+
+            } else if(event.translationY < -CART_ITEM_HEIGHT) {
+                scheduleOnRN(onSort,item.id, index -1);
+
+            }
+        })
+        .onEnd(() => {
+            positionY.value = 0;
+            scale.value = 1;
+           
+        });
+
+        const tabGesture = Gesture.Tap()
+              .onEnd(() => {
+                scheduleOnRN(onPress)
+              });
         
                 
-            const combineGesture = Gesture.Race(deleteGesture,sortGesture);
+            const combineGesture = Gesture.Race(deleteGesture,sortGesture,tabGesture);
 
           return (
                    <GestureDetector gesture={combineGesture} >
-                        <PlaceCard {...item} onPress={onPress} 
+                        <PlaceCard {...item} 
+                        onPress={onPress} 
                         style={animatedStyle}
                         />
                     </GestureDetector>
@@ -68,7 +97,7 @@ const PlaceCartWithGesture = ({
 }
 
 export default function ListPlaceScreen({ navigation }) {
-    const {places,deletePlace} = usePlace();
+    const {places,deletePlace,sortPlace} = usePlace();
 
 
     return (
@@ -76,16 +105,18 @@ export default function ListPlaceScreen({ navigation }) {
             <FlatList
                 data={places}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item }) => 
-                <PlaceCartWithGesture item={item} onPress={() => navigation.navigate('PlaceDetails', { place: item })}
+                renderItem={({ item,index }) => 
+                <PlaceCartWithGesture 
+                item={item}
+                index={index}
+                onPress={() => navigation.navigate('PlaceDetails', { place: item })}
                 onDelete={deletePlace}
+                onSort={sortPlace}
                 
-
                 />
+
+               }
                     
-                        
-                 
-                }
 
             />
 
