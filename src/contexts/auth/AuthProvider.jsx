@@ -1,6 +1,7 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { authService } from "../../services";
-import usePersistedState from "../../hooks/usePersistedState";
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../../src/firebaseConfig.js';
 
 
 export const AuthContext = createContext({
@@ -8,7 +9,7 @@ export const AuthContext = createContext({
     isLoading: false,
     error: null,
     user: null,
-    auth: null,
+    authState: null,
     login: async (email,password) => {},
     register: async (email,password,name) => {},
     logout: () => {}
@@ -17,12 +18,34 @@ export const AuthContext = createContext({
 
 export function AuthProvider({ children }) {
     
-    const [auth,setAuth] = usePersistedState("auth",{
-        accessToken: null,
+    const [authState,setAuthState] = useState({
+        
         user: null,
     });
     const [isLoading,setIsLoading] = useState(false);
     const [error,setError] = useState(null);
+
+    useEffect(() => {
+       
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+
+            if (user) {
+
+                setAuthState({
+                    user: {
+                        id: user.uid,
+                        email: user.email,
+                    }
+
+                });
+            } else {
+                setAuthState({ user: null });
+            }
+
+        })
+        return () => unsubscribe;
+
+    },[]);
 
     
 
@@ -32,9 +55,17 @@ export function AuthProvider({ children }) {
         try {
             setIsLoading(true);
 
-        const {user, accesToken} = await authService.login(email,password);
+        const user = await authService.login(email,password);
         
-        setAuth({ user,accesToken });
+        setAuthState({
+
+            user: {
+                id: user.uid,
+                email: user.email,
+            }
+          
+
+         });
 
         } catch (err) {
             setError(err.message || 'An error ocure during loading!')
@@ -50,7 +81,7 @@ export function AuthProvider({ children }) {
         try {
             setIsLoading(true);
             const { user, accessToken } = await authService.register(email, password, name);
-            setAuth({ user, accessToken });
+            setAuthState({ user, accessToken });
         } catch (err) {
             setError(err.message || 'An error occurred during registration');
         }
@@ -60,19 +91,18 @@ export function AuthProvider({ children }) {
     }
 
     const contextValue = {
-        isAutenticated: !! auth.user,
-        user: auth.user,
+        isAutenticated: !! authState.user,
+        user: authState.user,
         isLoading,
         error,
-        auth,
+        authState,
         login,
         register,
         logout: () => {
 
-            setAuth({
-            accessToken: null,
-            user: null,
+            setAuthState({
 
+            user: null,
 
             });
 

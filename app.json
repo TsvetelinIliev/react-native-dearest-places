@@ -20,7 +20,13 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ],
+      "package": "com.anonymous.reactnativedearestplaces"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -41,13 +47,13 @@
         }
       ],
       [
-         "expo-maps",
-      {
-        "requestLocationPermission": true,
-        "locationPermission": "Allow $(PRODUCT_NAME) to use your location"
-      }
-      ]
-     
+        "expo-maps",
+        {
+          "requestLocationPermission": true,
+          "locationPermission": "Allow $(PRODUCT_NAME) to use your location"
+        }
+      ],
+      "@react-native-firebase/app"
     ]
   }
 }
