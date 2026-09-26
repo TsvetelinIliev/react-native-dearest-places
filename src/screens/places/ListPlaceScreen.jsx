@@ -11,30 +11,31 @@ import { scheduleOnRN } from 'react-native-worklets';
 import { selectionAsync } from "expo-haptics";
 
 const CART_ITEM_HEIGHT = 100;
-const PlaceCartWithGesture = ({ 
+const PlaceCartWithGesture = ({
     item,
     index,
     onPress,
     onDelete,
     onSort,
 }) => {
-        const positionX = useSharedValue(0);
-        const positionY = useSharedValue(0); 
-        const scale = useSharedValue(1); 
+    const positionX = useSharedValue(0);
+    const positionY = useSharedValue(0);
+    const scale = useSharedValue(1);
 
-        const animatedStyle = useAnimatedStyle(() => {
+    const animatedStyle = useAnimatedStyle(() => {
 
-            const isSelected = scale.value > 1;
+        const isSelected = scale.value > 1;
 
-            return {
-            transform: [{transleteX: positionX.value},
-                { translateY: positionY.value},
-                { scale: scale.value }
+        return {
+            transform: [{ translateX: positionX.value },
+            { translateY: positionY.value },
+            { scale: scale.value }
             ],
             zIndex: isSelected ? 1 : 0,
-        }});
+        }
+    });
 
-          const trashOpacity = useAnimatedStyle(() => {
+    const trashOpacity = useAnimatedStyle(() => {
         const opacity = (-positionX.value - 50) / 250;
 
         return {
@@ -42,61 +43,61 @@ const PlaceCartWithGesture = ({
         };
     });
 
-        const deleteGesture = Gesture.Pan()
-          //.direction(Directions.LEFT)
-          .activeOffsetX(-20)
-          .onUpdate((event) => {
+    const deleteGesture = Gesture.Pan()
+        //.direction(Directions.LEFT)
+        .activeOffsetX(-20)
+        .onUpdate((event) => {
             positionX.value = event.translationX;
-          })
-          .onEnd((event) => {
-            if(event.translationX < -100) {
-                return scheduleOnRN(onDelete,item.id);
-                
-                
+        })
+        .onEnd((event) => {
+            if (event.translationX < -100) {
+                return scheduleOnRN(onDelete, item.id);
+
+
 
             }
             positionX.value = 0;
         });
 
-        const sortGesture = Gesture.Pan()
+    const sortGesture = Gesture.Pan()
         // .activeOffsetY([-20, 20])
         .activateAfterLongPress(500)
         .onStart(() => {
             scheduleOnRN(selectionAsync);
             scale.value = 1.05;
-            
+
         })
         .onUpdate((event) => {
             positionY.value = event.translationY;
 
-            if(event.translationY > CART_ITEM_HEIGHT) {
-                scheduleOnRN(onSort,item.id, index +1);
+            if (event.translationY > CART_ITEM_HEIGHT) {
+                scheduleOnRN(onSort, item.id, index + 1);
 
-            } else if(event.translationY < -CART_ITEM_HEIGHT) {
-                scheduleOnRN(onSort,item.id, index -1);
+            } else if (event.translationY < -CART_ITEM_HEIGHT) {
+                scheduleOnRN(onSort, item.id, index - 1);
 
             }
         })
         .onEnd(() => {
             positionY.value = 0;
             scale.value = 1;
-           
+
         });
 
-        const tabGesture = Gesture.Tap()
-              .onEnd(() => {
-                scheduleOnRN(onPress)
-              });
-        
-                
-            const combineGesture = Gesture.Race(deleteGesture,sortGesture,tabGesture);
+    const tabGesture = Gesture.Tap()
+        .onEnd(() => {
+            scheduleOnRN(onPress)
+        });
+
+
+    const combineGesture = Gesture.Race(deleteGesture, sortGesture, tabGesture);
 
     return (
         <GestureDetector gesture={combineGesture}>
             <View>
                 <PlaceCard
                     {...item}
-                    style={[animatedStyle,]}
+                    style={[animatedStyle]}
                     onPress={onPress}
                 />
 
