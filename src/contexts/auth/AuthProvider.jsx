@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { authService } from "../../services";
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged , signOut } from 'firebase/auth';
 import { auth } from '../../../src/firebaseConfig.js';
 
 
@@ -42,6 +42,8 @@ export function AuthProvider({ children }) {
                 setAuthState({ user: null });
             }
 
+            setIsLoading(false)
+
         })
         return () => unsubscribe;
 
@@ -80,8 +82,16 @@ export function AuthProvider({ children }) {
     const register = async (email, password, name) => {
         try {
             setIsLoading(true);
-            const { user, accessToken } = await authService.register(email, password, name);
-            setAuthState({ user, accessToken });
+            const user = await authService.register(email, password, name);
+            setAuthState({
+
+            user: {
+                id: user.uid,
+                email: user.email,
+            }
+          
+
+         });
         } catch (err) {
             setError(err.message || 'An error occurred during registration');
         }
@@ -98,13 +108,23 @@ export function AuthProvider({ children }) {
         authState,
         login,
         register,
-        logout: () => {
+        logout: async () => {
 
-            setAuthState({
+            try {
 
-            user: null,
+                await signOut(auth);
 
-            });
+                setAuthState({
+
+                    user: null,
+
+                });
+
+            } catch (err) {
+                setError(err.message || 'An error occurred during logout')
+
+            }
+           
 
             
         },
