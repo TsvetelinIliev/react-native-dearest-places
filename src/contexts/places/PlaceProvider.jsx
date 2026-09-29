@@ -27,7 +27,11 @@ export function PlaceProvider({children}) {
 
             const newPlace = await placeService.create(placeData);
 
+            console.log('placeData:', placeData);
+
             setPlaces((oldPlaces) => [...oldPlaces,newPlace]);
+
+            console.log('newPlace:', newPlace);
             
         } catch (err) {
 
