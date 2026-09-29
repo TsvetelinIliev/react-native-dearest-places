@@ -1,4 +1,7 @@
+import { collection,addDoc } from 'firebase/firestore';
 import { api } from "./api";
+import { db } from '../firebaseConfig';
+import { log } from 'firebase/firestore/pipelines';
 
 
 export async function getAll() {
@@ -9,9 +12,17 @@ export async function getAll() {
 
 export async function create(placeData) {
 
-    const result = await api.post('/places',placeData);
+    //const result = await api.post('/places',placeData);
 
-    return result.data;
+     const ref = await addDoc(collection(db,'places'),placeData);
+
+    
+
+   
+
+ 
+
+    return ref;
     
 };
 
