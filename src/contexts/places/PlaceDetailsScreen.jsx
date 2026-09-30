@@ -9,11 +9,44 @@ import {
 import { Ionicons } from '@react-native-vector-icons/ionicons';
 import * as Sharing from 'expo-sharing';
 import Button from '../../components/Button';
+import { usePlace } from './usePlaces';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
 const PlaceDetailsScreen = ({ route, navigation }) => {
-    const { place } = route.params;
+    const { placeId } = route.params;
+    const {getPlacesById} = usePlace();
+    const [place, setPlace] = useState(null);
+
+
+    useEffect(() => {
+
+        const placeDetails = getPlacesById(placeId);
+
+        if(!placeDetails) {
+            navigation.goBack();
+        }
+
+        setPlace(placeDetails);
+
+    },[]);
+
+    if (!place) {
+
+        return (
+            <ActivityIndicator size={'large'} color= "#6366f1" />
+
+
+
+           
+        )
+
+    }
+
+
+    
 
     {/* loading overlay */ }
     return (

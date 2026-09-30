@@ -125,7 +125,7 @@ export default function ListPlaceScreen({ navigation }) {
                 <PlaceCartWithGesture 
                 item={item}
                 index={index}
-                onPress={() => navigation.navigate('PlaceDetails', { place: item })}
+                onPress={() => navigation.navigate('PlaceDetails', { placeId: item.id })}
                 onDelete={deletePlace}
                 onSort={sortPlace}
                 
