@@ -27,11 +27,11 @@ export function PlaceProvider({children}) {
 
             const newPlace = await placeService.create(placeData);
 
-            console.log('placeData:', placeData);
+            
 
             setPlaces((oldPlaces) => [...oldPlaces,newPlace]);
 
-            console.log('newPlace:', newPlace);
+           
             
         } catch (err) {
 
@@ -67,7 +67,7 @@ export function PlaceProvider({children}) {
                 place => place.id === placeId
             );
 
-            if (oldIndex === -1) return oldPlaces;
+            if (index === -1) return oldPlaces;
             if (newIndex < 0 || newIndex >= oldPlaces.length) {
                 return oldPlaces;
             }

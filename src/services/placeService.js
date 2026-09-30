@@ -1,28 +1,28 @@
-import { collection,addDoc } from 'firebase/firestore';
+import { collection,addDoc,getDocs } from 'firebase/firestore';
 import { api } from "./api";
 import { db } from '../firebaseConfig';
 import { log } from 'firebase/firestore/pipelines';
 
 
 export async function getAll() {
-    const result = await api.get('/places');
+    //const result = await api.get('/places');
 
-    return result.data;
+    const result = await getDocs(collection(db, 'places'));
+
+    const places = result.docs.map(doc => ({id: doc.id, ...doc.data()}));
+
+    return places;
 }
 
 export async function create(placeData) {
 
     //const result = await api.post('/places',placeData);
 
-     const ref = await addDoc(collection(db,'places'),placeData);
+     const result = await addDoc(collection(db,'places'),placeData);
 
     
 
-   
-
- 
-
-    return ref;
+    return {id: result.id, ...placeData};
     
 };
 
