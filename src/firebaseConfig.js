@@ -11,6 +11,7 @@ getReactNativePersistence,
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = JSON.parse(
 process.env.EXPO_PUBLIC_FIREBASE_CONFIG
@@ -23,3 +24,4 @@ persistence: getReactNativePersistence(AsyncStorage)
 });
 
 export const db = getFirestore(app);
+export const storage = getStorage(app);

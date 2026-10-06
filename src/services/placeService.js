@@ -1,7 +1,9 @@
 import { collection,addDoc,getDocs } from 'firebase/firestore';
+import { ref , uploadBytes , getDownloadURL} from 'firebase/storage';
 import { api } from "./api";
-import { db } from '../firebaseConfig';
+import { db, storage } from '../firebaseConfig';
 import { log } from 'firebase/firestore/pipelines';
+import uuid from 'react-native-uuid';
 
 
 export async function getAll() {
@@ -14,15 +16,25 @@ export async function getAll() {
     return places;
 }
 
-export async function create(placeData) {
+export async function create(fullPlaceData) {
+
+    const { imageUri, ...placeData } = fullPlaceData;
 
     //const result = await api.post('/places',placeData);
 
-     const result = await addDoc(collection(db,'places'),placeData);
+    const response = await fetch(imageUri);
+    const imageBlob = await response.blob();
+
+    const imageRef = ref(storage, `places/${uuid.v4()}.jpg`);
+    await uploadBytes(imageRef , imageBlob);
+    const imageUrl = await getDownloadURL(imageRef);
+
+    
+     const result = await addDoc(collection(db,'places'),{...placeData , imageUri: imageUrl});
 
     
 
-    return {id: result.id, ...placeData};
+    return {id: result.id, ...placeData, imageUri: imageUrl};
     
 };
 
